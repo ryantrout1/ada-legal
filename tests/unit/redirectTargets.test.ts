@@ -111,9 +111,10 @@ describe('the two spellings of a URL agree', () => {
 });
 
 describe('the redirect table is intact', () => {
-  it('still holds all 188', () => {
+  it('still holds all 189', () => {
     // The count is pinned so a bulk edit that drops entries is visible.
-    expect(config.redirects).toHaveLength(188);
+    // 188 legacy redirects + /civil-rights/az -> /civil-rights/arizona.
+    expect(config.redirects).toHaveLength(189);
   });
 
   it('is permanent everywhere a page actually moved', () => {

@@ -35,6 +35,64 @@ export const CONSENTS: readonly ConsentWording[] = [
   },
 ];
 
+/** Page and wizard words. DRAFT until Gina approves. */
+export const UI = {
+  pickerTitle: 'File a state civil rights complaint',
+  pickerIntro:
+    "Pick your state. We'll walk you through your state's civil rights complaint form, one or two questions at a time, and give you the filled-in form to sign and send yourself.",
+  pickerMore: 'More states are coming.',
+  pickerUnknown: "We don't have that state yet.",
+  title: (stateName: string) => `Get your ${stateName} civil rights complaint form ready`,
+  intro: (agency: string, formName: string) =>
+    `Answer a few short questions and we'll fill in the ${agency}'s ${formName} for you. ` +
+    'This version is for disability discrimination at a business or place open to the public, ' +
+    'like a store, restaurant, theater or office.',
+  howItWorks: [
+    'Answer about 11 short screens. It takes about 10 minutes.',
+    'Check everything on the review screen. You can change any answer.',
+    'Download or print your filled-in form. Sign it and send it to the Attorney General yourself.',
+  ],
+  privacyNote:
+    'We keep a copy of your answers so we can understand the barriers people face. See our privacy policy for how we handle it.',
+  privacyLink: 'Privacy policy',
+  previewBanner: 'Admin preview. Forms you finish here are saved and tagged "admin-preview".',
+  start: 'Start',
+  comingSoon: 'This form is coming soon. Please check back.',
+  loading: 'Loading',
+  stepOf: (n: number, total: number) => `Step ${n} of ${total}`,
+  back: 'Back',
+  next: 'Next',
+  backToReview: 'Back to review',
+  errorSummary: 'Please fix these before you go on:',
+  yes: 'Yes',
+  no: 'No',
+  chooseState: 'Choose a state',
+  reviewTitle: 'Check your answers',
+  reviewIntro: 'This is what goes on your form. Change anything that is not right.',
+  edit: (title: string) => `Change ${title.toLowerCase()}`,
+  notGiven: 'Not given',
+  areaLine: (area: string, basis: string) => `Type of complaint: ${area}, ${basis}. This is already chosen on your form.`,
+  consentTitle: 'Two optional choices',
+  consentIntro: 'You do not need to check either box to get your form.',
+  getForm: 'Get my form',
+  working: 'Making your form',
+  pdfFailed:
+    'Something went wrong making your form. Please try again. If it keeps happening, you can fill in the blank form from the Attorney General instead:',
+  blankForm: 'Blank form from the Attorney General (PDF)',
+  tryAgain: 'Try again',
+  doneTitle: 'Your form is ready',
+  doneWarning: "Download or print it now. We can't show it to you again after you leave this page.",
+  download: 'Download my form (PDF)',
+  openToPrint: 'Open my form to print',
+  nextStepsTitle: 'What to do next',
+  nextSteps: [
+    'Read your form. You can still change anything in it.',
+    'Sign and date the last page.',
+    'Send it to the Attorney General one of the ways below. We do not send it for you.',
+  ],
+  leaveWarning: 'Your answers are not saved anywhere you can come back to. Leave this page?',
+} as const;
+
 /** Shown on the first and last screens. */
 export function disclaimer(config: StateConfig): string {
   return (

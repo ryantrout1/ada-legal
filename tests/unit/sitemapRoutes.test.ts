@@ -43,7 +43,15 @@ const NON_PUBLIC_PREFIXES = [
   '/s/',
 ];
 
+/**
+ * Public routes that are built but not launched: they serve noindex and an
+ * honest "coming soon" behind a flag. Remove an entry here in the same
+ * commit that adds the page to the sitemap at launch.
+ */
+const PRELAUNCH = ['/civil-rights'];
+
 function isPublicRoute(path: string): boolean {
+  if (PRELAUNCH.includes(path)) return false;
   return !NON_PUBLIC_PREFIXES.some((p) => path === p || path.startsWith(p));
 }
 

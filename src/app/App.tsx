@@ -39,6 +39,8 @@ import StandardsChapter from './routes/public/StandardsChapter.js';
 import GuidePage from './routes/public/GuidePage.js';
 import SpotLanding from './routes/public/SpotLanding.js';
 import SpotReadout from './routes/public/spot/SpotReadout.js';
+import CivilRightsPage from './routes/public/civilRights/CivilRightsPage.js';
+import AdminCivilRightsPreview from './routes/admin/AdminCivilRightsPreview.js';
 import AdminSignIn from './routes/admin/SignIn.js';
 import AdminSessions from './routes/admin/AdminSessions.js';
 import AdminSessionDetail from './routes/admin/AdminSessionDetail.js';
@@ -136,6 +138,8 @@ export function AppRoutes() {
           <Route path="/spot" element={<SpotLanding />} />
           {/* Public hosted readout — the buyer's report link from the email. */}
           <Route path="/spot/r/:slug" element={<SpotReadout />} />
+          <Route path="/civil-rights" element={<CivilRightsPage />} />
+          <Route path="/civil-rights/:state" element={<CivilRightsPage />} />
         </Route>
 
         {/* /photo, /review and /admin/photo-review were the photo analyzer
@@ -240,6 +244,7 @@ function AdminShell() {
           <Route path="spot/reads/:id" element={<AdminFreeReadDetail />} />
           <Route path="spot-review" element={<AdminSpotReview />} />
           <Route path="spot-review/:slug" element={<AdminSpotReviewDetail />} />
+          <Route path="civil-rights/preview/:state" element={<AdminCivilRightsPreview />} />
           <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
         </Route>
       </Routes>

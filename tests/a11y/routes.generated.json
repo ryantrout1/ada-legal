@@ -20,6 +20,14 @@
     "name": "attorneys directory"
   },
   {
+    "path": "/civil-rights",
+    "name": "civil rights state picker"
+  },
+  {
+    "path": "/civil-rights/arizona",
+    "name": "civil rights complaint (Arizona)"
+  },
+  {
     "path": "/for-attorneys",
     "name": "for-attorneys page"
   },

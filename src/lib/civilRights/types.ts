@@ -31,6 +31,8 @@ export interface FieldSpec {
   maxLength: number;
   /** Short help shown under the label. Draft copy until Gina approves. */
   hint?: string;
+  /** HTML autocomplete token, so phones can fill the person's own details. */
+  autocomplete?: string;
 }
 
 /** One wizard screen. One or two questions each. */

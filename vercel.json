@@ -13,6 +13,7 @@
       "permanent": false
     },
     { "source": "/class-actions", "destination": "/lawsuits", "permanent": true },
+    { "source": "/civil-rights/az", "destination": "/civil-rights/arizona", "permanent": true },
     { "source": "/LawsuitDetail", "has": [{"type": "query", "key": "slug", "value": "coen-v-ga-doc-deaf-prisoners"}], "destination": "/lawsuits", "permanent": true },
     { "source": "/LawsuitDetail", "has": [{"type": "query", "key": "slug", "value": "eeoc-v-union-pacific-one-percent-rule"}], "destination": "/lawsuits", "permanent": true },
     { "source": "/lawsuits/coen-v-ga-doc-deaf-prisoners", "destination": "/lawsuits", "permanent": true },

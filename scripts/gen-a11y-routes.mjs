@@ -34,6 +34,7 @@ const FIXTURES = {
     path: '/standards-guide/guide/turning-handrails',
     name: 'standards guide detail',
   },
+  '/civil-rights/:state': { path: '/civil-rights/arizona', name: 'civil rights complaint (Arizona)' },
   '/standards-guide/chapter/:num': {
     path: '/standards-guide/chapter/1',
     name: 'standards chapter',
@@ -66,6 +67,7 @@ const NAMES = {
   '/glossary': 'glossary',
   '/standards-guide': 'standards guide landing',
   '/spot': 'Spot landing',
+  '/civil-rights': 'civil rights state picker',
 };
 
 function nameFor(path) {
