@@ -2,9 +2,9 @@
  * AdminCivilRights: forms people finished on /civil-rights/:state.
  *
  * Newest first, with the two consent answers on every row (who said we may
- * send updates, who said we may contact them). The CSV is the full record
- * and every download is written to the audit log. Admin-preview test forms
- * are marked so they are easy to delete.
+ * send updates, who said we may contact them). Full details, including
+ * contact details, are on each form's own page; there is no bulk export.
+ * Admin-preview test forms are marked so they are easy to delete.
  */
 
 import { useEffect, useState } from 'react';
@@ -23,8 +23,6 @@ export default function AdminCivilRights() {
   const [rows, setRows] = useState<AdminListRow[] | null>(null);
   const [capped, setCapped] = useState(false);
   const [error, setError] = useState(false);
-  const [csvBusy, setCsvBusy] = useState(false);
-  const [csvError, setCsvError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,49 +44,20 @@ export default function AdminCivilRights() {
     };
   }, []);
 
-  async function downloadCsv() {
-    setCsvBusy(true);
-    setCsvError(null);
-    try {
-      const resp = await fetch('/api/admin/civil-rights?format=csv', { credentials: 'include' });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const url = URL.createObjectURL(await resp.blob());
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'civil-rights-submissions.csv';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      setCsvError(err instanceof Error ? `Could not download the CSV (${err.message}).` : 'Could not download the CSV.');
-    } finally {
-      setCsvBusy(false);
-    }
-  }
-
   return (
     <div>
       <h1 className="font-display text-2xl text-ink-900 mb-1">Civil rights forms</h1>
       <p className="text-ink-700 text-sm mb-4">
-        Forms people finished on the state civil rights complaint page. Each one includes contact
-        details; the CSV download is logged.
+        Forms people finished on the state civil rights complaint page. Open one to see its full
+        details.
       </p>
 
       <div className="mb-6 flex flex-wrap gap-2">
-        <button type="button" className={BUTTON} onClick={() => void downloadCsv()} disabled={csvBusy || !rows?.length}>
-          {csvBusy ? 'Preparing CSV' : 'Download CSV'}
-        </button>
         <Link className={BUTTON} to="/admin/civil-rights/preview/arizona">
           Preview the Arizona form
         </Link>
       </div>
 
-      {csvError && (
-        <div role="alert" className="mb-4 rounded-md border border-danger-500 px-4 py-3 text-sm text-danger-500">
-          {csvError}
-        </div>
-      )}
       {error && (
         <div role="alert" className="rounded-md border border-surface-200 bg-white p-4 text-sm">
           Couldn&rsquo;t load civil rights forms.
@@ -101,7 +70,7 @@ export default function AdminCivilRights() {
         </div>
       )}
       {capped && (
-        <p className="mb-3 text-sm text-ink-700">Showing the newest {rows?.length} forms. The CSV has the same set.</p>
+        <p className="mb-3 text-sm text-ink-700">Showing the newest {rows?.length} forms.</p>
       )}
 
       <ul className="list-none p-0 m-0 flex flex-col gap-3">

@@ -1,24 +1,15 @@
 /**
- * Civil rights complaint page: admin list, CSV export, delete, retention.
+ * Civil rights complaint page: admin list, delete, retention.
  *
  * Encodes /plan "State civil rights complaint page" Phase 4 (AC9 + retention):
- * admins get a list and a CSV; non-admins get nothing; formula cells are
- * neutralized; every export is audited first (no audit, no export);
- * submissions older than 24 months are pruned.
+ * admins get a list; non-admins get nothing; deletes are audited;
+ * submissions older than 24 months are pruned. There is no bulk export.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { readFileSync } from 'node:fs';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import {
-  csvCell,
-  toCsv,
-  exportWithAudit,
-  listView,
-  CSV_COLUMNS,
-  RETENTION_MONTHS,
-  type AdminSubmission,
-} from '../../src/lib/civilRights/adminCore.js';
+import { listView, RETENTION_MONTHS, type AdminSubmission } from '../../src/lib/civilRights/adminCore.js';
 
 const requireAdmin = vi.fn();
 const list = vi.fn();
@@ -122,56 +113,11 @@ beforeEach(() => {
   makeStore.mockClear();
 });
 
-describe('CSV', () => {
-  it('neutralizes cells a spreadsheet would run as a formula', () => {
-    expect(csvCell('=HYPERLINK("x")')).toBe(`"'=HYPERLINK(""x"")"`);
-    expect(csvCell('+1 602')).toBe("'+1 602");
-    expect(csvCell('-5')).toBe("'-5");
-    expect(csvCell('@SUM(A1)')).toBe("'@SUM(A1)");
-    expect(csvCell('\tx')).toBe("'\tx");
-  });
-
-  it('quotes commas, quotes and line breaks', () => {
-    expect(csvCell('a, b')).toBe('"a, b"');
-    expect(csvCell('say "hi"')).toBe('"say ""hi"""');
-    expect(csvCell('line1\nline2')).toBe('"line1\nline2"');
-    expect(csvCell(null)).toBe('');
-  });
-
-  it('has a BOM, a header and one line per row, with both consents', () => {
-    const csv = toCsv([row()]);
-    expect(csv.startsWith('﻿submitted_at,id,state,')).toBe(true);
-    const lines = csv.trim().split('\r\n');
-    expect(lines).toHaveLength(2);
-    const header = lines[0].replace('﻿', '').split(',');
-    expect(header).toContain('consent_updates');
-    expect(header).toContain('consent_contact');
-    expect(header).toHaveLength(CSV_COLUMNS.length);
-    expect(lines[1]).toContain(',yes,no,facebook,');
-  });
-
-  it('list view marks admin-preview rows', () => {
+describe('list view', () => {
+  it('marks admin-preview rows and shows both consents', () => {
     expect(listView(row({ utmSource: 'admin-preview' })).preview).toBe(true);
     expect(listView(row()).consentUpdates).toBe('yes');
-  });
-});
-
-describe('exportWithAudit', () => {
-  it('audits before building the file', async () => {
-    const calls: string[] = [];
-    const csv = await exportWithAudit([row(), row()], async (n) => {
-      calls.push(`audit:${n}`);
-    });
-    expect(calls).toEqual(['audit:2']);
-    expect(csv).toContain('Jordan Rivera');
-  });
-
-  it('no audit, no export', async () => {
-    await expect(
-      exportWithAudit([row()], async () => {
-        throw new Error('audit down');
-      }),
-    ).rejects.toThrow('audit down');
+    expect(listView(row()).consentContact).toBe('no');
   });
 });
 
@@ -202,30 +148,13 @@ describe('/api/admin/civil-rights (AC9)', () => {
     expect(res.headers['cache-control']).toBe('no-store');
   });
 
-  it('CSV export writes an audit row, then sends the file', async () => {
+  it('there is no CSV export', async () => {
     requireAdmin.mockResolvedValue({ userId: 'user_1', email: 'a@b.c', via: 'clerk' });
     list.mockResolvedValue([row()]);
-    auditLog.mockResolvedValue(undefined);
     const res = makeRes();
     await listHandler(req({ query: { format: 'csv' } }), res as unknown as VercelResponse);
-    expect(res.statusCode).toBe(200);
-    expect(auditLog).toHaveBeenCalledWith(
-      expect.objectContaining({ action: 'civil_rights.export', metadata: expect.objectContaining({ count: 1 }) }),
-    );
-    expect(res.headers['content-type']).toContain('text/csv');
-    expect(String(res.body)).toContain('Jordan Rivera');
-  });
-
-  it('CSV export fails closed when the audit write fails', async () => {
-    requireAdmin.mockResolvedValue({ userId: 'user_1', email: 'a@b.c', via: 'clerk' });
-    list.mockResolvedValue([row()]);
-    auditLog.mockRejectedValue(new Error('audit down'));
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const res = makeRes();
-    await listHandler(req({ query: { format: 'csv' } }), res as unknown as VercelResponse);
-    spy.mockRestore();
-    expect(res.statusCode).toBe(500);
-    expect(String(JSON.stringify(res.body))).not.toContain('Jordan');
+    expect(res.headers['content-type'] ?? '').not.toContain('text/csv');
+    expect(auditLog).not.toHaveBeenCalled();
   });
 
   it('delete is audited', async () => {
