@@ -50,6 +50,9 @@ export const ADA_SESSION_BUCKET = 'ada_session';
 export const ADA_TURN_BUCKET = 'ada_turn';
 export const ADA_PHOTO_BUCKET = 'ada_photo';
 
+/** State civil rights complaint saves (/api/public/civil-rights/submit). */
+export const CIVIL_RIGHTS_SUBMIT_BUCKET = 'civil_rights_submit';
+
 /**
  * Deliberately generous. Shared IPs are the norm in exactly the places
  * this guide matters most — offices, schools, libraries, clinics — and a
@@ -95,6 +98,16 @@ export const RATE_LIMITS: Record<string, RateLimitConfig> = {
   [ADA_PHOTO_BUCKET]: {
     short: { windowMs: 60 * 60_000, max: 3 },
     long: { windowMs: 24 * 60 * 60_000, max: 10 },
+  },
+
+  /**
+   * Civil rights form saves. One person finishes one form; a few retries or
+   * a second form for a second business is normal. A library or clinic IP
+   * helping several people in a day still fits under the daily cap.
+   */
+  [CIVIL_RIGHTS_SUBMIT_BUCKET]: {
+    short: { windowMs: 10 * 60_000, max: 5 },
+    long: { windowMs: 24 * 60 * 60_000, max: 20 },
   },
 };
 
