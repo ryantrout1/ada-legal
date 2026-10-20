@@ -109,3 +109,26 @@ export function deadlineNote(config: StateConfig): string {
   const d = config.deadline;
   return `The ${config.agencyName} lists this time limit for ${d.area} complaints: ${d.limit}. ${d.from}.`;
 }
+
+/**
+ * Privacy policy section for the civil rights complaint page. DRAFT for
+ * Gina. Rendered on /privacy only once `civil_rights_enabled` is on, and
+ * shown to admins on the preview page for review before then.
+ */
+export const PRIVACY_SECTION = {
+  id: 'civil-rights-forms',
+  title: 'State civil rights complaint forms',
+  simpleTitle: 'Civil rights complaint forms',
+  standard: [
+    "When you use our state civil rights complaint page to fill in a state agency's form (for example, the Arizona Attorney General's Civil Rights Intake Questionnaire), we keep a copy of your answers: your name, contact details and address, the business you are complaining about, what happened, and your answers to the form's other questions. We also keep a record of which optional boxes you checked, the exact words next to each box, and when.",
+    'We use these answers to understand the accessibility barriers people run into and to share patterns and numbers with attorneys who work on these cases. We do not sell your information. We share your name or contact details with a partner attorney only if you checked the box saying an attorney may contact you.',
+    'We do not file the form for you or send it to the agency. Changes you make inside the downloaded PDF stay with you; we never see them.',
+    'We delete these answers 24 months after you send them. You can ask us to delete them sooner using the contact details below. We send you updates only if you checked that box, and every update email has a way to unsubscribe.',
+  ],
+  simple: [
+    'If you fill in a state complaint form on our site, we keep a copy of your answers. That includes your name, how to reach you, the business, and what happened. We also keep a note of which optional boxes you checked, and when.',
+    "We use the answers to learn about barriers and to show lawyers the numbers. We don't sell them. We only give your name and contact details to a lawyer if you checked the box that says a lawyer may contact you.",
+    "We don't send the form for you. If you change the PDF after you download it, we don't see that.",
+    'We delete the answers after 24 months. You can ask us to delete them sooner. We only email you if you checked that box, and you can always unsubscribe.',
+  ],
+} as const;

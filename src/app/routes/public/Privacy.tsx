@@ -38,6 +38,11 @@
 import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/Breadcrumbs.js';
 import { PageTOC } from '../../components/PageTOC.js';
+import {
+  CivilRightsPrivacySection,
+  useCivilRightsPrivacyVisible,
+} from './civilRights/CivilRightsPrivacySection.js';
+import { PRIVACY_SECTION } from '../../../lib/civilRights/copy.js';
 import { useReadingLevel } from '../../components/standards/ReadingLevelContext.js';
 import { ReadingLevelToggle } from '../../components/standards/ReadingLevelToggle.js';
 import { CurrentReadingLevel } from '../../components/standards/CurrentReadingLevel.js';
@@ -109,6 +114,7 @@ export default function Privacy() {
 // grade — readable but uses some legal/technical vocabulary where
 // precision matters (commercial terms, infrastructure providers, etc.).
 function StandardPrivacy() {
+  const civilRights = useCivilRightsPrivacyVisible();
   return (
     <>
       <p className="text-lg text-ink-700 leading-relaxed mb-10">
@@ -125,6 +131,7 @@ function StandardPrivacy() {
           { label: 'Who we share it with', id: 'who-we-share-it-with' },
           { label: 'What we NEVER do', id: 'what-we-never-do' },
           { label: 'How long we keep it', id: 'how-long-we-keep-it' },
+          ...(civilRights ? [{ label: PRIVACY_SECTION.title, id: PRIVACY_SECTION.id }] : []),
           { label: 'Your rights', id: 'your-rights' },
           { label: 'Children', id: 'children' },
           { label: 'Changes to this policy', id: 'changes-to-this-policy' },
@@ -261,6 +268,8 @@ function StandardPrivacy() {
         to delete that record too.
       </p>
 
+      <CivilRightsPrivacySection show={civilRights} />
+
       <h2 id="your-rights" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         Your rights
       </h2>
@@ -361,6 +370,7 @@ function StandardPrivacy() {
 // active voice, concrete examples. NEEDS LEGAL REVIEW — Gina is
 // reviewing.
 function SimplePrivacy() {
+  const civilRights = useCivilRightsPrivacyVisible();
   return (
     <>
       <p className="text-lg text-ink-700 leading-relaxed mb-10">
@@ -377,6 +387,7 @@ function SimplePrivacy() {
           { label: 'Who else sees it', id: 'who-we-share-it-with' },
           { label: 'What we never do', id: 'what-we-never-do' },
           { label: 'How long we keep it', id: 'how-long-we-keep-it' },
+          ...(civilRights ? [{ label: PRIVACY_SECTION.simpleTitle, id: PRIVACY_SECTION.id }] : []),
           { label: 'What you can ask for', id: 'your-rights' },
           { label: 'Kids', id: 'children' },
           { label: 'When this page changes', id: 'changes-to-this-policy' },
@@ -511,6 +522,8 @@ function SimplePrivacy() {
         That way we can check in later if needed. You can ask us to
         delete the note too.
       </p>
+
+      <CivilRightsPrivacySection simple show={civilRights} />
 
       <h2 id="your-rights" className="font-display text-2xl sm:text-3xl text-ink-900 mb-4">
         What you can ask for

@@ -13,6 +13,7 @@ import { resolveState } from '../../../lib/civilRights/states/index.js';
 import { UI } from '../../../lib/civilRights/copy.js';
 import { CivilRightsWizard, BUTTON_PRIMARY } from '../public/civilRights/CivilRightsWizard.js';
 import { IntroBody } from '../public/civilRights/CivilRightsPage.js';
+import { CivilRightsPrivacySection } from '../public/civilRights/CivilRightsPrivacySection.js';
 
 export default function AdminCivilRightsPreview() {
   const { state } = useParams();
@@ -45,6 +46,12 @@ export default function AdminCivilRightsPreview() {
           </button>
         </IntroBody>
       )}
+      <section aria-label="Privacy policy section, draft" className="mt-12 border-t border-surface-200 pt-8">
+        <p className="mb-4 text-sm font-semibold text-ink-900">
+          Draft privacy policy section (appears on /privacy once the page is turned on):
+        </p>
+        <CivilRightsPrivacySection show />
+      </section>
     </div>
   );
 }
