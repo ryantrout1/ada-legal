@@ -15,10 +15,11 @@ import { useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { listStates, resolveState, CANONICAL_PATH } from '../../../../lib/civilRights/states/index.js';
-import { UI, deadlineNote, disclaimer } from '../../../../lib/civilRights/copy.js';
+import { UI } from '../../../../lib/civilRights/copy.js';
 import type { StateConfig } from '../../../../lib/civilRights/types.js';
 import { useCivilRightsEnabled } from '../../../hooks/useCivilRightsEnabled.js';
-import { CivilRightsWizard, BUTTON_PRIMARY } from './CivilRightsWizard.js';
+import { CivilRightsWizard } from './CivilRightsWizard.js';
+import { CivilRightsLanding } from './CivilRightsLanding.js';
 
 const SECTION = 'max-w-2xl mx-auto px-5 sm:px-8 py-10 sm:py-16';
 
@@ -65,59 +66,19 @@ function StateIntro({ config }: { config: StateConfig }) {
   const [started, setStarted] = useState(false);
 
   return (
-    <section className={SECTION}>
+    <>
       <Helmet>
         <title>{`${UI.title(config.name)} | ADA Legal Link`}</title>
         {flag !== 'on' ? <meta name="robots" content="noindex" /> : null}
       </Helmet>
       {started ? (
-        <>
+        <section className={SECTION}>
           <h1 className="sr-only">{UI.title(config.name)}</h1>
           <CivilRightsWizard config={config} onExit={() => setStarted(false)} />
-        </>
+        </section>
       ) : (
-        <IntroBody config={config}>
-          {flag === 'on' ? (
-            <button type="button" className={BUTTON_PRIMARY} onClick={() => setStarted(true)}>
-              {UI.start}
-            </button>
-          ) : flag === 'off' ? (
-            <p className="text-lg font-medium text-ink-900">{UI.comingSoon}</p>
-          ) : (
-            <p className="text-lg text-ink-700" aria-live="polite">
-              {UI.loading}
-            </p>
-          )}
-        </IntroBody>
+        <CivilRightsLanding config={config} status={flag} onStart={() => setStarted(true)} />
       )}
-    </section>
-  );
-}
-
-/** The first screen: what this is, the disclaimer, the agency's deadline wording. */
-export function IntroBody({ config, children }: { config: StateConfig; children: React.ReactNode }) {
-  return (
-    <>
-      <h1 className="font-display text-4xl sm:text-5xl leading-[1.1] tracking-tight text-ink-900 mb-6">
-        {UI.title(config.name)}
-      </h1>
-      <p className="mb-6 text-lg text-ink-700 leading-relaxed">{UI.intro(config.agencyName, config.formName)}</p>
-      <p className="mb-6 rounded-md border-2 border-control-border p-4 text-lg text-ink-900">{disclaimer(config)}</p>
-      <ol className="mb-6 list-decimal pl-6 text-lg text-ink-700">
-        {UI.howItWorks.map((s) => (
-          <li key={s} className="mb-2">
-            {s}
-          </li>
-        ))}
-      </ol>
-      <p className="mb-4 text-base text-ink-700">{deadlineNote(config)}</p>
-      <p className="mb-8 text-base text-ink-700">
-        {UI.privacyNote}{' '}
-        <Link className="text-accent-500 underline" to="/privacy">
-          {UI.privacyLink}
-        </Link>
-      </p>
-      {children}
     </>
   );
 }

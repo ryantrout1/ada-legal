@@ -43,20 +43,42 @@ export const UI = {
   pickerMore: 'More states are coming.',
   pickerUnknown: "We don't have that state yet.",
   title: (stateName: string) => `Get your ${stateName} civil rights complaint form ready`,
-  intro: (agency: string, formName: string) =>
-    `Answer a few short questions and we'll fill in the ${agency}'s ${formName} for you. ` +
-    'This version is for disability discrimination at a business or place open to the public, ' +
-    'like a store, restaurant, theater or office.',
-  howItWorks: [
-    'Answer about 11 short screens. It takes about 10 minutes.',
-    'Check everything on the review screen. You can change any answer.',
-    'Download or print your filled-in form. Sign it and send it to the Attorney General yourself.',
-  ],
   privacyNote:
     'We keep a copy of your answers so we can understand the barriers people face. See our privacy policy for how we handle it.',
   privacyLink: 'Privacy policy',
+  // Landing page (campaign arrivals, mostly on phones).
+  heroEyebrow: (stateName: string) => `${stateName} · Disability civil rights`,
+  heroTitle: (stateName: string) =>
+    `Shut out because of a disability? Report it to the ${stateName} Attorney General.`,
+  heroSub:
+    "We'll walk you through the Attorney General's official complaint form one question at a time and fill it in for you. Then you sign it and send it.",
+  startCta: 'Start my form',
+  heroFacts: ['Free to use', 'About 10 minutes', 'No account'],
+  forYouTitle: 'Is this for you?',
+  forYouIntro:
+    'This form is for disability discrimination at a business or place open to the public, like a store, restaurant, theater or office. For example:',
+  forYou: [
+    'There was no step-free way in',
+    'There was no accessible parking',
+    'Your service animal was turned away',
+    'There was no restroom you could use',
+    'Staff refused a change you needed to get served',
+  ],
+  forYouNote: "Something else happened? You can still describe it in your own words.",
+  stepsTitle: 'How it works',
+  steps: [
+    { title: 'Answer short questions', body: 'One or two per screen, about what happened and where.' },
+    { title: 'Check your answers', body: 'See everything on one page and change anything.' },
+    { title: 'Download, sign and send', body: 'Get the filled-in form. You sign it and send it to the Attorney General.' },
+  ],
+  getTitle: "What you'll get",
+  getBody: (formName: string, stateName: string) =>
+    `The ${stateName} Attorney General's own ${formName}, filled in with your answers, as a PDF you can still edit, print and sign.`,
+  getImageAlt: (formName: string, stateName: string) =>
+    `Page 1 of the ${stateName} Attorney General's ${formName}, blank`,
+  deadlineTitle: 'Time limit',
+  readyTitle: 'Ready when you are',
   previewBanner: 'Admin preview. Forms you finish here are saved and tagged "admin-preview".',
-  start: 'Start',
   comingSoon: 'This form is coming soon. Please check back.',
   loading: 'Loading',
   stepOf: (n: number, total: number) => `Step ${n} of ${total}`,

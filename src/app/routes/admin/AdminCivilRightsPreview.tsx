@@ -11,8 +11,8 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { resolveState } from '../../../lib/civilRights/states/index.js';
 import { UI } from '../../../lib/civilRights/copy.js';
-import { CivilRightsWizard, BUTTON_PRIMARY } from '../public/civilRights/CivilRightsWizard.js';
-import { IntroBody } from '../public/civilRights/CivilRightsPage.js';
+import { CivilRightsWizard } from '../public/civilRights/CivilRightsWizard.js';
+import { CivilRightsLanding } from '../public/civilRights/CivilRightsLanding.js';
 import { CivilRightsPrivacySection } from '../public/civilRights/CivilRightsPrivacySection.js';
 
 export default function AdminCivilRightsPreview() {
@@ -40,11 +40,7 @@ export default function AdminCivilRightsPreview() {
           <CivilRightsWizard config={config} preview onExit={() => setStarted(false)} />
         </>
       ) : (
-        <IntroBody config={config}>
-          <button type="button" className={BUTTON_PRIMARY} onClick={() => setStarted(true)}>
-            {UI.start}
-          </button>
-        </IntroBody>
+        <CivilRightsLanding config={config} status="on" onStart={() => setStarted(true)} />
       )}
       <section aria-label="Privacy policy section, draft" className="mt-12 border-t border-surface-200 pt-8">
         <p className="mb-4 text-sm font-semibold text-ink-900">

@@ -246,6 +246,7 @@ export const AZ: StateConfig = {
   ],
   pdf: {
     path: '/forms/az/civil_rights_intake_form-2024.pdf',
+    previewImage: '/forms/az/form-page-1.png',
     sha256: '92e336c13c1e94171bf8f05dca33643c4e42110c30cf6a053a41c34c25d82c58',
     plan: azPlan,
   },

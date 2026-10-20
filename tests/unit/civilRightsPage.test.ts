@@ -39,6 +39,7 @@ function render(path: string): string {
 
 const PAGE_FILES = [
   'src/app/routes/public/civilRights/CivilRightsPage.tsx',
+  'src/app/routes/public/civilRights/CivilRightsLanding.tsx',
   'src/app/routes/public/civilRights/CivilRightsWizard.tsx',
   'src/app/routes/public/civilRights/FieldInput.tsx',
 ];
@@ -53,7 +54,9 @@ describe('/civil-rights routes (AC1)', () => {
 
   it('/civil-rights/arizona renders the Arizona intro', () => {
     const html = render('/civil-rights/arizona');
-    expect(html).toContain(UI.title('Arizona'));
+    expect(html).toContain(UI.heroTitle('Arizona'));
+    expect(html).toContain(UI.forYouTitle);
+    expect(html).toContain('/forms/az/form-page-1.png');
     expect((html.match(/<h1/g) ?? []).length).toBe(1);
   });
 
@@ -83,7 +86,7 @@ describe('isolation and disclaimer (AC11)', () => {
   });
 
   it('the last screen renders the disclaimer too', () => {
-    const src = readFileSync(PAGE_FILES[1], 'utf8');
+    const src = readFileSync(PAGE_FILES[2], 'utf8');
     const done = src.slice(src.indexOf('// ── Done'));
     expect(done).toContain('disclaimer(config)');
     expect(done).toContain('UI.doneWarning');
@@ -100,7 +103,7 @@ describe('isolation and disclaimer (AC11)', () => {
   });
 
   it('the step never goes in the URL', () => {
-    const src = readFileSync(PAGE_FILES[1], 'utf8');
+    const src = readFileSync(PAGE_FILES[2], 'utf8');
     expect(src).not.toMatch(/useNavigate|useSearchParams|history\.(push|replace)State|localStorage|sessionStorage/);
   });
 });
@@ -108,7 +111,7 @@ describe('isolation and disclaimer (AC11)', () => {
 describe('launch flag (AC12)', () => {
   it('before the flag answers, there is no Start button', () => {
     const html = render('/civil-rights/arizona');
-    expect(html).not.toContain(`>${UI.start}<`);
+    expect(html).not.toContain(`>${UI.startCta}<`);
     expect(html).toContain('noindex');
   });
 

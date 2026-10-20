@@ -87,6 +87,8 @@ export interface StateConfig {
 export interface PdfTemplate {
   /** Public URL path, e.g. /forms/az/civil_rights_intake_form-2024.pdf */
   path: string;
+  /** Picture of the blank form's first page, shown on the landing page. */
+  previewImage: string;
   sha256: string;
   plan: (answers: Answers, summary: string) => PdfFillPlan;
 }
