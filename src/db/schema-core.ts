@@ -782,3 +782,76 @@ export const emailCopy = pgTable(
     uniqueIndex('email_copy_slot_key').on(t.orgId, t.templateKey, t.slotKey, t.readingLevel),
   ],
 );
+
+// ─── State civil rights complaint page ───────────────────────────────────
+// One row per finished wizard (/civil-rights/:state), written by
+// POST /api/public/civil-rights/submit. The id is made in the browser so a
+// retry lands on the same row. Typed columns for the list and CSV; `answers`
+// keeps the full cleaned answer set so a future state's extra questions are
+// never lost. Consents live in their own table: one row per checkbox,
+// checked or not, with the exact wording shown. See migration 0050.
+
+export const civilRightsSubmissions = pgTable(
+  'civil_rights_submissions',
+  {
+    id: uuid('id').primaryKey(),
+    stateCode: text('state_code').notNull(),
+    formVersion: text('form_version').notNull(),
+    area: text('area').notNull(),
+    basis: text('basis').notNull(),
+    complainantName: text('complainant_name').notNull(),
+    email: text('email'),
+    phone: text('phone').notNull(),
+    address1: text('address1').notNull(),
+    address2: text('address2'),
+    city: text('city').notNull(),
+    state: text('state').notNull(),
+    zip: text('zip').notNull(),
+    altContactName: text('alt_contact_name'),
+    altContactPhone: text('alt_contact_phone'),
+    respondentName: text('respondent_name').notNull(),
+    respondentCompany: text('respondent_company'),
+    respondentAddress1: text('respondent_address1'),
+    respondentAddress2: text('respondent_address2'),
+    respondentCity: text('respondent_city').notNull(),
+    respondentState: text('respondent_state').notNull(),
+    respondentZip: text('respondent_zip'),
+    whatHappened: text('what_happened').notNull(),
+    witnesses: text('witnesses'),
+    firstIncidentDate: date('first_incident_date'),
+    lastIncidentDate: date('last_incident_date').notNull(),
+    ongoing: text('ongoing').notNull(),
+    hasAttorney: text('has_attorney').notNull(),
+    attorneyNameAddress: text('attorney_name_address'),
+    legalActionPending: text('legal_action_pending').notNull(),
+    otherAgencies: text('other_agencies'),
+    additionalComments: text('additional_comments'),
+    summaryText: text('summary_text').notNull(),
+    copyVersion: text('copy_version').notNull(),
+    utmSource: text('utm_source'),
+    utmMedium: text('utm_medium'),
+    utmCampaign: text('utm_campaign'),
+    answers: jsonb('answers').$type<Record<string, string>>().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index('civil_rights_submissions_created_at_idx').on(t.createdAt),
+    index('civil_rights_submissions_state_code_idx').on(t.stateCode),
+  ],
+);
+
+export const civilRightsConsents = pgTable(
+  'civil_rights_consents',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    submissionId: uuid('submission_id')
+      .notNull()
+      .references(() => civilRightsSubmissions.id, { onDelete: 'cascade' }),
+    kind: text('kind').notNull(),
+    granted: boolean('granted').notNull(),
+    wording: text('wording').notNull(),
+    wordingVersion: text('wording_version').notNull(),
+    recordedAt: timestamp('recorded_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('civil_rights_consents_submission_kind').on(t.submissionId, t.kind)],
+);
